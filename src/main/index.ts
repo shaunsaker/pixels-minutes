@@ -3,18 +3,20 @@ import { app, BrowserWindow, shell } from 'electron'
 import { join } from 'path'
 
 import icon from '../../resources/icon.png?asset'
+import { initIpc } from './initIpc'
 
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    height: 600,
+    width: 1200,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
+      // nodeIntegration: true,
     },
   })
 
@@ -34,6 +36,8 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  initIpc()
 }
 
 // This method will be called when Electron has finished
