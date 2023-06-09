@@ -2,7 +2,7 @@ import { FolderIcon } from '@heroicons/react/24/outline'
 import { Button, Subtitle, Text, Title } from '@tremor/react'
 import React, { ReactElement } from 'react'
 
-import { useSelectProjectsFolder } from '../../../store/projectsFolder/useSelectProjectsFolder'
+import { useSelectProjectsFolder } from '../../../store/projects/useSelectProjectsFolder'
 
 export const WelcomeView = (): ReactElement => {
   const selectProjectsFolder = useSelectProjectsFolder()

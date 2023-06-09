@@ -1,12 +1,12 @@
 import { Card } from '@tremor/react'
 import React, { ReactElement, useEffect } from 'react'
 
-import { useCreateProject } from '../../projects/useCreateProject'
-import { useProjects } from '../../projects/useProjects'
 import { useCurrentTracking } from '../../store/currentTracking/useCurrentTracking'
 import { useStartTracking } from '../../store/currentTracking/useStartTracking'
 import { useStopTracking } from '../../store/currentTracking/useStopTracking'
-import { useProjectsFolder } from '../../store/projectsFolder/useProjectsFolder'
+import { useCreateProject } from '../../store/projects/useCreateProject'
+import { useProjects } from '../../store/projects/useProjects'
+import { useProjectsFolder } from '../../store/projects/useProjectsFolder'
 import { useRefEventListener } from '../../utils/useRefEventListener'
 import { SettingsView } from './components/SettingsView'
 import { Tabs } from './components/Tabs'
@@ -14,12 +14,6 @@ import { TimeEntriesView } from './components/TimeEntriesView'
 import { TimerView } from './components/TimerView'
 import { WelcomeView } from './components/WelcomeView'
 
-// stop timer on sleep
-// time entries for any given date or range of dates
-// grouping of time entries by project
-// adding, editing and deleting time entries
-// exporting report per project
-// branding
 export const Home = (): ReactElement => {
   const [currentTracking] = useCurrentTracking()
   const [projects] = useProjects()
@@ -92,7 +86,7 @@ export const Home = (): ReactElement => {
         {!hasProjectsFolder ? (
           <WelcomeView />
         ) : (
-          <div className="w-full flex flex-col items-center">
+          <div className="w-full h-full flex flex-col items-center">
             <Tabs
               render={activeTab => {
                 if (activeTab === 'timeEntries') {

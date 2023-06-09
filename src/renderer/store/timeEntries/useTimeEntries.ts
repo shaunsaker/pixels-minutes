@@ -8,6 +8,8 @@ export type TimeEntry = {
   stoppedAt: string
 }
 
-const atom = atomWithStorage<Record<string, TimeEntry>>('timeEntries', {})
+export type TimeEntries = Record<string, TimeEntry>
+
+const atom = atomWithStorage<TimeEntries>('timeEntries', {})
 
 export const useTimeEntries = () => useAtom(atom)

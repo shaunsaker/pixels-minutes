@@ -2,8 +2,8 @@ import { FolderIcon } from '@heroicons/react/24/outline'
 import { Button, Table, TableBody, TableCell, TableRow } from '@tremor/react'
 import React, { ReactElement } from 'react'
 
-import { useProjectsFolder } from '../../../store/projectsFolder/useProjectsFolder'
-import { useSelectProjectsFolder } from '../../../store/projectsFolder/useSelectProjectsFolder'
+import { useProjectsFolder } from '../../../store/projects/useProjectsFolder'
+import { useSelectProjectsFolder } from '../../../store/projects/useSelectProjectsFolder'
 import { getFolderFromPath } from '../../../utils/getFolderFromPath'
 
 // TODO: SS convert into table
