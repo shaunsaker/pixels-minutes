@@ -20,9 +20,9 @@ export const TimeEntriesView = (): ReactElement => {
   const hasTimeEntries = Object.keys(timeEntries).length > 0
 
   return (
-    <div className="flex flex-col overflow-hidden">
+    <>
       {hasTimeEntries ? (
-        <Table className="mt-2 flex-1 overflow-auto">
+        <Table className="mb-6">
           <TableHead>
             <TableRow>
               <TableHeaderCell className="bg-white dark:bg-gray-900"></TableHeaderCell>
@@ -76,6 +76,6 @@ export const TimeEntriesView = (): ReactElement => {
       ) : (
         <Text className="mt-2">No time entries to show.</Text>
       )}
-    </div>
+    </>
   )
 }

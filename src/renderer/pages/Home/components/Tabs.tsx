@@ -19,7 +19,7 @@ export const Tabs = ({ render }: TabsProps): ReactElement => {
         <Tab value="settings" text="Settings" icon={Cog6ToothIcon} />
       </TabList>
 
-      <div className="w-full pt-6">{render && render(activeTab)}</div>
+      <div className="w-full flex flex-col pt-6">{render && render(activeTab)}</div>
     </>
   )
 }
