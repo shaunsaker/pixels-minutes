@@ -1,5 +1,7 @@
 import {
   Metric,
+  MultiSelectBox,
+  MultiSelectBoxItem,
   Table,
   TableBody,
   TableCell,
@@ -13,27 +15,45 @@ import React, { ReactElement } from 'react'
 
 import { DATE_FORMAT, DURATION_FORMAT, TIME_FORMAT } from '../../../constants'
 import { useProjects } from '../../../store/projects/useProjects'
+import { useSelectedProjects } from '../../../store/projects/useSelectedProjects'
 import { getTotalTimeTracked } from '../../../store/timeEntries/getTotalTimeTracked'
 import { useTimeEntries } from '../../../store/timeEntries/useTimeEntries'
 
-// persist active tab
-// view time entries per project
 // view time entries for any given date or range of dates
 // adding, editing and deleting time entries
 // export report to ?
 export const TimeEntriesView = (): ReactElement => {
   const [timeEntries] = useTimeEntries()
   const [projects] = useProjects()
+  const [selectedProjects, setSelectedProjects] = useSelectedProjects()
+
   const hasTimeEntries = Object.keys(timeEntries).length > 0
 
   return (
     <>
+      <MultiSelectBox
+        placeholder="Select Project(s)"
+        value={selectedProjects}
+        onValueChange={value => setSelectedProjects(value)}
+      >
+        {Object.values(projects).map(project => (
+          <MultiSelectBoxItem key={project.id} value={project.id}>
+            {project.name}
+          </MultiSelectBoxItem>
+        ))}
+      </MultiSelectBox>
+
       {hasTimeEntries ? (
         <>
           <div>
             <Text>Total Time Tracked</Text>
 
-            <Metric>{getTotalTimeTracked(timeEntries)}</Metric>
+            <Metric>
+              {
+                // @ts-expect-error FIXME: something wrong in the useTimeEntries hook
+                getTotalTimeTracked(timeEntries)
+              }
+            </Metric>
           </div>
 
           <Table>
