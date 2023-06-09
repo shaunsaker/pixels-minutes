@@ -22,6 +22,7 @@ import { useTimeEntries } from '../../../store/timeEntries/useTimeEntries'
 import { useTimeEntriesSelectedDates } from '../../../store/timeEntries/useTimeEntriesSelectedDates'
 import { useTimeEntriesSelectedProjects } from '../../../store/timeEntries/useTimeEntriesSelectedProjects'
 
+// it needs to be more obvious when a timer is started/stopped (we could maybe even remove the timer page if it's available globally)
 // export report to pdf
 // adding, editing and deleting time entries
 export const TimeEntriesView = (): ReactElement => {
@@ -85,37 +86,35 @@ export const TimeEntriesView = (): ReactElement => {
 
         {hasTimeEntries && (
           <TableBody>
-            {Object.values(timeEntries)
-              .sort((a, b) => (dayjs(b.stoppedAt).isAfter(a.stoppedAt) ? 1 : -1))
-              .map(timeEntry => {
-                const project = projects[timeEntry.projectId]
+            {Object.values(timeEntries).map(timeEntry => {
+              const project = projects[timeEntry.projectId]
 
-                if (!project) {
-                  return null
-                }
+              if (!project) {
+                return null
+              }
 
-                return (
-                  <TableRow key={timeEntry.id}>
-                    <TableCell>
-                      <div className={`w-4 h-4 rounded-full bg-${project.color}-500`}></div>
-                    </TableCell>
+              return (
+                <TableRow key={timeEntry.id}>
+                  <TableCell>
+                    <div className={`w-4 h-4 rounded-full bg-${project.color}-500`}></div>
+                  </TableCell>
 
-                    <TableCell>{project.name}</TableCell>
+                  <TableCell>{project.name}</TableCell>
 
-                    <TableCell>{dayjs(timeEntry.stoppedAt).format(DATE_FORMAT)}</TableCell>
+                  <TableCell>{dayjs(timeEntry.stoppedAt).format(DATE_FORMAT)}</TableCell>
 
-                    <TableCell>{dayjs(timeEntry.startedAt).format(TIME_FORMAT)}</TableCell>
+                  <TableCell>{dayjs(timeEntry.startedAt).format(TIME_FORMAT)}</TableCell>
 
-                    <TableCell>{dayjs(timeEntry.stoppedAt).format(TIME_FORMAT)}</TableCell>
+                  <TableCell>{dayjs(timeEntry.stoppedAt).format(TIME_FORMAT)}</TableCell>
 
-                    <TableCell>
-                      {dayjs
-                        .duration(dayjs(timeEntry.stoppedAt).diff(timeEntry.startedAt))
-                        .format(DURATION_FORMAT)}
-                    </TableCell>
-                  </TableRow>
-                )
-              })}
+                  <TableCell>
+                    {dayjs
+                      .duration(dayjs(timeEntry.stoppedAt).diff(timeEntry.startedAt))
+                      .format(DURATION_FORMAT)}
+                  </TableCell>
+                </TableRow>
+              )
+            })}
           </TableBody>
         )}
       </Table>

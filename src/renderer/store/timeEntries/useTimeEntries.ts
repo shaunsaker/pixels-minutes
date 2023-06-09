@@ -81,5 +81,17 @@ export const useTimeEntries = () => {
     )
   }
 
+  // reverse sort the time entries
+  filteredTimeEntries = Object.fromEntries(
+    Object.entries(filteredTimeEntries).sort((a, b) => {
+      const aStartedAt = dayjs(a[1].startedAt)
+      const bStartedAt = dayjs(b[1].startedAt)
+
+      if (aStartedAt.isBefore(bStartedAt)) return 1
+      if (aStartedAt.isAfter(bStartedAt)) return -1
+      return 0
+    }),
+  )
+
   return [filteredTimeEntries, setTimeEntries]
 }
