@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { useCallback } from 'react'
 
-import { getUniqueId } from '../utils/getUniqueId'
+import { getUniqueId } from '../../utils/getUniqueId'
 import { CurrentTracking, useCurrentTracking } from './useCurrentTracking'
 
 export const useStartTracking = () => {

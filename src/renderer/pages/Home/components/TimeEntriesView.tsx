@@ -11,7 +11,7 @@ import dayjs from 'dayjs'
 import React, { ReactElement } from 'react'
 
 import { useProjects } from '../../../projects/useProjects'
-import { useTimeEntries } from '../../../timeEntries/useTimeEntries'
+import { useTimeEntries } from '../../../store/timeEntries/useTimeEntries'
 
 export const TimeEntriesView = (): ReactElement => {
   const [timeEntries] = useTimeEntries()
