@@ -1,8 +1,15 @@
 import { electronAPI } from '@electron-toolkit/preload'
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
+
+import { Ipc } from '../main/ipc/models'
 
 // Custom APIs for renderer
-const api = {}
+const api = {
+  selectFolder: () => ipcRenderer.invoke(Ipc.selectFolder),
+  watchFolder: (folder: string) => ipcRenderer.invoke(Ipc.watchFolder, folder),
+  onActiveProjectChange: (callback: (project: string) => void) =>
+    ipcRenderer.on(Ipc.onActiveProjectChange, (_, project: string) => callback(project)),
+}
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise

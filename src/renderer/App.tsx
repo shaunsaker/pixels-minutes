@@ -1,6 +1,5 @@
 import { FolderIcon } from '@heroicons/react/24/outline'
 import {
-  Metric,
   Subtitle,
   Table,
   TableBody,
@@ -14,72 +13,136 @@ import {
 import { Button } from '@tremor/react'
 import { Card } from '@tremor/react'
 import dayjs from 'dayjs'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useCallback } from 'react'
 import { ReactElement } from 'react'
 
-import { Ipc } from '../common/ipc'
-import { Project } from './projects/models'
+import { Timer } from './components/Timer'
+import { CurrentTracking, useCurrentTracking } from './currentTracking/useCurrentTracking'
+import { COLORS, Project, useProjects } from './projects/useProjects'
 import { useProjectsFolder } from './projectsFolder/useProjectsFolder'
-import { TimeEntry } from './timeEntries/models'
+import { TimeEntry, useTimeEntries } from './timeEntries/useTimeEntries'
 import { getFolderFromPath } from './utils/getFolderFromPath'
+import { getUniqueId } from './utils/getUniqueId'
+import { useRefEventListener } from './utils/useRefEventListener'
 
-// logic
-// seeing what application was open
-// time entries for any given date
+// tabs for timer, time entries and settings
+// ability to stop timer
+// stop timer on sleep
+// time entries for any given date or range of dates
 // grouping of time entries by project
 // adding, editing and deleting time entries
 // exporting report per project
 // branding
 export const App = (): ReactElement => {
+  const [currentTracking, setCurrentTracking] = useCurrentTracking()
+  const [timeEntries, setTimeEntries] = useTimeEntries()
+  const [projects, setProjects] = useProjects()
   const [projectsFolder, setProjectsFolder] = useProjectsFolder()
+
+  const hasTimeEntries = Object.keys(timeEntries).length > 0
   const hasProjectsFolder = Boolean(projectsFolder)
 
-  const isTracking = true
+  useEffect(
+    () => {
+      // on application launch or if the projects folder changes, watch it for changes
+      if (projectsFolder) {
+        try {
+          window.api.watchFolder(projectsFolder)
+        } catch (error) {
+          console.error(error as Error)
+        }
+      }
 
-  const projects: Record<string, Project> = {
-    '1': {
-      id: '1',
-      name: 'pixels-minutes',
-      color: 'blue',
-      createdAt: '2021-08-01T00:00:00.000Z',
-      updatedAt: '2021-08-01T00:00:00.000Z',
+      // cleanup is done in watchFolder on invocation so we don't need to return a cleanup function
     },
-    '2': {
-      id: '2',
-      name: 'fat-buck',
-      color: 'pink',
-      createdAt: '2021-08-01T00:00:00.000Z',
-      updatedAt: '2021-08-01T00:00:00.000Z',
-    },
-  }
+    // we don't want this effect to run if currentTracking changes
+    // eslint-disable-next-line
+    [projectsFolder],
+  )
 
-  const timeEntries: Record<string, TimeEntry> = {
-    '1': {
-      id: '1',
-      projectId: '1',
-      startedAt: '2021-08-01T00:00:00.000Z',
-      stoppedAt: '2021-08-01T00:02:00.000Z',
+  const createProject = useCallback(
+    (projectId: string) => {
+      const project: Project = {
+        id: projectId,
+        name: projectId,
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      }
+
+      setProjects({
+        ...projects,
+        [projectId]: project,
+      })
     },
-    '2': {
-      id: '2',
-      projectId: '1',
-      startedAt: '2021-08-01T00:02:00.000Z',
-      stoppedAt: '2021-08-01T00:04:00.000Z',
+    [projects, setProjects],
+  )
+
+  const startTracking = useCallback(
+    (projectId: string) => {
+      const newCurrentTracking: CurrentTracking = {
+        id: getUniqueId(),
+        projectId,
+        startedAt: dayjs().toISOString(),
+      }
+
+      setCurrentTracking(newCurrentTracking)
     },
-    '3': {
-      id: '3',
-      projectId: '2',
-      startedAt: '2021-08-01T00:04:00.000Z',
-      stoppedAt: '2021-08-01T00:08:00.000Z',
+    [setCurrentTracking],
+  )
+
+  const stopTracking = useCallback(() => {
+    if (!currentTracking) {
+      throw new Error('Trying to stop a non-existent tracking!')
+    }
+
+    const timeEntry: TimeEntry = {
+      id: getUniqueId(),
+      projectId: currentTracking.projectId,
+      startedAt: currentTracking.startedAt,
+      stoppedAt: dayjs().toISOString(),
+    }
+
+    setTimeEntries({ ...timeEntries, [timeEntry.id]: timeEntry })
+
+    setCurrentTracking(null)
+  }, [currentTracking, setCurrentTracking, setTimeEntries, timeEntries])
+
+  // since the listener won't have access to fresh state, we need to handle the cb in a ref
+  const handleActiveProjectChangeRef = useRefEventListener((projectId: string) => {
+    // if the project does not yet exist, add it
+    if (!projects[projectId]) {
+      createProject(projectId)
+    }
+
+    // if the project changed, stop any existing tracking and start tracking the new project
+    if (currentTracking?.projectId !== projectId) {
+      if (currentTracking) {
+        stopTracking()
+      }
+
+      startTracking(projectId)
+    }
+  })
+
+  useEffect(
+    () => {
+      // handle active project change events
+      if (projectsFolder) {
+        window.api.onActiveProjectChange((projectId: string) => {
+          handleActiveProjectChangeRef.current(projectId)
+        })
+      }
+
+      // FIXME: we should somehow add a cleanup function but this is only affected by hot reloading
     },
-  }
-  const hasTimeEntries = Object.keys(timeEntries).length > 0
+    // we only want this effect to run once
+    // eslint-disable-next-line
+    [projectsFolder],
+  )
 
   const onSelectProjectsFolderClick = useCallback(async () => {
-    const { canceled, filePaths } = (await window.electron.ipcRenderer.invoke(
-      Ipc.selectFolder,
-    )) as Electron.OpenDialogReturnValue
+    const { canceled, filePaths } =
+      (await window.api.selectFolder()) as Electron.OpenDialogReturnValue
 
     if (!canceled) {
       setProjectsFolder(filePaths[0])
@@ -87,8 +150,8 @@ export const App = (): ReactElement => {
   }, [setProjectsFolder])
 
   return (
-    <div className="w-screen h-screen flex justify-center items-center bg-gray-900 p-8">
-      <Card className="max-w-xl text-center flex flex-col overflow-auto">
+    <div className="w-screen h-screen overflow-hidden flex flex-col justify-center items-center bg-gray-900 p-8">
+      <Card className="max-w-2xl max-h-full flex flex-col items-center text-center">
         {!hasProjectsFolder && (
           <>
             <Title>
@@ -107,88 +170,117 @@ export const App = (): ReactElement => {
         )}
 
         {hasProjectsFolder && (
-          <div className="flex justify-center items-center gap-4">
-            <Subtitle>
-              📂 Tracking Time In <b>{getFolderFromPath(projectsFolder)}</b>
-            </Subtitle>
+          <div className="flex flex-col items-center">
+            <Subtitle>📂 Tracking Time In</Subtitle>
 
-            <Button
-              icon={FolderIcon}
-              variant="light"
-              size="xs"
-              onClick={onSelectProjectsFolderClick}
-            >
-              Change
-            </Button>
+            <div className="mt-2 ml-2 flex items-center">
+              <Title>{getFolderFromPath(projectsFolder)}</Title>
+
+              <Button
+                className="ml-4"
+                icon={FolderIcon}
+                variant="light"
+                size="xs"
+                onClick={onSelectProjectsFolderClick}
+              >
+                Change
+              </Button>
+            </div>
           </div>
         )}
 
-        {!hasProjectsFolder && (
+        {!hasProjectsFolder ? (
           <Button className="mt-4" icon={FolderIcon} onClick={onSelectProjectsFolderClick}>
             Select Projects folder
           </Button>
-        )}
+        ) : (
+          <>
+            <div className="mt-6 max-w-lg w-full bg-gray-50 rounded border p-2">
+              <Subtitle>🎯 Active Project</Subtitle>
 
-        {isTracking && (
-          <div className="mt-6 bg-gray-50 rounded border p-2">
-            <Subtitle>⏰ Active Project Timer</Subtitle>
+              {currentTracking ? (
+                <>
+                  <Title>{projects[currentTracking.projectId].name}</Title>
 
-            <Title className="mt-2">
-              <b>pixels-minutes</b>
-            </Title>
+                  <Timer className="mt-2" startTime={currentTracking.startedAt} />
+                </>
+              ) : (
+                <Text className="mt-2">
+                  Not currently tracking. Tracking will start automatically when you edit any of
+                  your project files.
+                </Text>
+              )}
+            </div>
 
-            <Metric className="mt-2">
-              <b>00:12:23</b>
-            </Metric>
-          </div>
-        )}
+            <div className="mt-6 flex flex-col overflow-hidden">
+              <Subtitle>🗓️ Today's Time Entries</Subtitle>
+              {hasTimeEntries ? (
+                <Table className="mt-2 flex-1 overflow-auto">
+                  <TableHead>
+                    <TableRow>
+                      <TableHeaderCell className="bg-white dark:bg-gray-900"></TableHeaderCell>
 
-        {hasTimeEntries && (
-          <div className="mt-6">
-            <Subtitle>Today's Time Entries</Subtitle>
+                      <TableHeaderCell className="bg-white dark:bg-gray-900">
+                        Project
+                      </TableHeaderCell>
 
-            <Table className="mt-2">
-              <TableHead>
-                <TableRow>
-                  <TableHeaderCell></TableHeaderCell>
+                      <TableHeaderCell className="bg-white dark:bg-gray-900">Date</TableHeaderCell>
 
-                  <TableHeaderCell>Project</TableHeaderCell>
+                      <TableHeaderCell className="bg-white dark:bg-gray-900">
+                        Started
+                      </TableHeaderCell>
 
-                  <TableHeaderCell>Started</TableHeaderCell>
+                      <TableHeaderCell className="bg-white dark:bg-gray-900">
+                        Stopped
+                      </TableHeaderCell>
 
-                  <TableHeaderCell>Stopped</TableHeaderCell>
-
-                  <TableHeaderCell>Duration</TableHeaderCell>
-                </TableRow>
-              </TableHead>
-
-              <TableBody>
-                {Object.values(timeEntries).map(timeEntry => {
-                  const project = projects[timeEntry.projectId]
-
-                  return (
-                    <TableRow key={timeEntry.id}>
-                      <TableCell>
-                        <div className={`w-4 h-4 rounded-full bg-${project.color}-500`}></div>
-                      </TableCell>
-
-                      <TableCell>{project.name}</TableCell>
-
-                      <TableCell>{dayjs(timeEntry.startedAt).format('HH:mm:ss')}</TableCell>
-
-                      <TableCell>{dayjs(timeEntry.stoppedAt).format('HH:mm:ss')}</TableCell>
-
-                      <TableCell>
-                        {dayjs
-                          .duration(dayjs(timeEntry.stoppedAt).diff(timeEntry.startedAt))
-                          .format('HH:mm:ss')}
-                      </TableCell>
+                      <TableHeaderCell className="bg-white dark:bg-gray-900">
+                        Duration
+                      </TableHeaderCell>
                     </TableRow>
-                  )
-                })}
-              </TableBody>
-            </Table>
-          </div>
+                  </TableHead>
+
+                  <TableBody>
+                    {Object.values(timeEntries)
+                      .sort((a, b) => (dayjs(b.stoppedAt).isAfter(a.stoppedAt) ? 1 : -1))
+                      .map(timeEntry => {
+                        const project = projects[timeEntry.projectId]
+
+                        if (!project) {
+                          return null
+                        }
+
+                        return (
+                          <TableRow key={timeEntry.id}>
+                            <TableCell>
+                              <div className={`w-4 h-4 rounded-full bg-${project.color}-500`}></div>
+                            </TableCell>
+
+                            <TableCell>{project.name}</TableCell>
+
+                            <TableCell>
+                              {dayjs(timeEntry.stoppedAt).format('DD MMM YYYY')}
+                            </TableCell>
+
+                            <TableCell>{dayjs(timeEntry.startedAt).format('HH:mm')}</TableCell>
+
+                            <TableCell>{dayjs(timeEntry.stoppedAt).format('HH:mm')}</TableCell>
+
+                            <TableCell>
+                              {dayjs
+                                .duration(dayjs(timeEntry.stoppedAt).diff(timeEntry.startedAt))
+                                .format('HH:mm')}
+                            </TableCell>
+                          </TableRow>
+                        )
+                      })}
+                  </TableBody>
+                </Table>
+              ) : (
+                <Text className="mt-2">No time entries to show.</Text>
+              )}
+            </div>
+          </>
         )}
       </Card>
     </div>

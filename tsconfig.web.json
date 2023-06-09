@@ -4,8 +4,7 @@
     "src/renderer/typings/env.d.ts",
     "src/renderer/**/*",
     "src/renderer/**/*.tsx",
-    "src/preload/*.d.ts",
-    "src/common/*",
+    "src/preload/*.d.ts"
   ],
   "compilerOptions": {
     "composite": true,

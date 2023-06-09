@@ -1,6 +1,6 @@
 import { dialog, ipcMain } from 'electron'
 
-import { Ipc } from '../common/ipc'
+import { Ipc } from './ipc/models'
 
 export const selectFolder = () => {
   ipcMain.handle(Ipc.selectFolder, async () => {
