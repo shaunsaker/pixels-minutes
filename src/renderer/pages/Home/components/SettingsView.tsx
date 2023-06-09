@@ -23,13 +23,7 @@ export const SettingsView = (): ReactElement => {
             </TableCell>
 
             <TableCell>
-              <Button
-                className="ml-4"
-                icon={FolderIcon}
-                variant="light"
-                size="xs"
-                onClick={selectProjectsFolder}
-              >
+              <Button className="ml-4" icon={FolderIcon} size="xs" onClick={selectProjectsFolder}>
                 Change
               </Button>
             </TableCell>

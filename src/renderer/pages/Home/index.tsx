@@ -1,12 +1,12 @@
 import { Card } from '@tremor/react'
-import dayjs from 'dayjs'
-import React, { ReactElement, useCallback, useEffect } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 
-import { CurrentTracking, useCurrentTracking } from '../../currentTracking/useCurrentTracking'
-import { COLORS, Project, useProjects } from '../../projects/useProjects'
+import { useCurrentTracking } from '../../currentTracking/useCurrentTracking'
+import { useStartTracking } from '../../currentTracking/useStartTracking'
+import { useStopTracking } from '../../currentTracking/useStopTracking'
+import { useCreateProject } from '../../projects/useCreateProject'
+import { useProjects } from '../../projects/useProjects'
 import { useProjectsFolder } from '../../projectsFolder/useProjectsFolder'
-import { TimeEntry, useTimeEntries } from '../../timeEntries/useTimeEntries'
-import { getUniqueId } from '../../utils/getUniqueId'
 import { useRefEventListener } from '../../utils/useRefEventListener'
 import { SettingsView } from './components/SettingsView'
 import { Tabs } from './components/Tabs'
@@ -14,8 +14,6 @@ import { TimeEntriesView } from './components/TimeEntriesView'
 import { TimerView } from './components/TimerView'
 import { WelcomeView } from './components/WelcomeView'
 
-// tabs for timer, time entries and settings
-// ability to stop timer
 // stop timer on sleep
 // time entries for any given date or range of dates
 // grouping of time entries by project
@@ -23,10 +21,12 @@ import { WelcomeView } from './components/WelcomeView'
 // exporting report per project
 // branding
 export const Home = (): ReactElement => {
-  const [currentTracking, setCurrentTracking] = useCurrentTracking()
-  const [timeEntries, setTimeEntries] = useTimeEntries()
-  const [projects, setProjects] = useProjects()
+  const [currentTracking] = useCurrentTracking()
+  const [projects] = useProjects()
   const [projectsFolder] = useProjectsFolder()
+  const createProject = useCreateProject()
+  const startTracking = useStartTracking()
+  const stopTracking = useStopTracking()
 
   const hasProjectsFolder = Boolean(projectsFolder)
 
@@ -47,52 +47,6 @@ export const Home = (): ReactElement => {
     // eslint-disable-next-line
     [projectsFolder],
   )
-
-  const createProject = useCallback(
-    (projectId: string) => {
-      const project: Project = {
-        id: projectId,
-        name: projectId,
-        color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      }
-
-      setProjects({
-        ...projects,
-        [projectId]: project,
-      })
-    },
-    [projects, setProjects],
-  )
-
-  const startTracking = useCallback(
-    (projectId: string) => {
-      const newCurrentTracking: CurrentTracking = {
-        id: getUniqueId(),
-        projectId,
-        startedAt: dayjs().toISOString(),
-      }
-
-      setCurrentTracking(newCurrentTracking)
-    },
-    [setCurrentTracking],
-  )
-
-  const stopTracking = useCallback(() => {
-    if (!currentTracking) {
-      throw new Error('Trying to stop a non-existent tracking!')
-    }
-
-    const timeEntry: TimeEntry = {
-      id: getUniqueId(),
-      projectId: currentTracking.projectId,
-      startedAt: currentTracking.startedAt,
-      stoppedAt: dayjs().toISOString(),
-    }
-
-    setTimeEntries({ ...timeEntries, [timeEntry.id]: timeEntry })
-
-    setCurrentTracking(null)
-  }, [currentTracking, setCurrentTracking, setTimeEntries, timeEntries])
 
   // since the listener won't have access to fresh state, we need to handle the cb in a ref
   const handleActiveProjectChangeRef = useRefEventListener((projectId: string) => {
@@ -133,6 +87,7 @@ export const Home = (): ReactElement => {
         className="max-w-2xl max-h-full flex flex-col items-center text-center"
         decoration="top"
         decorationColor="blue"
+        style={{ minHeight: 480 }}
       >
         {!hasProjectsFolder ? (
           <WelcomeView />
