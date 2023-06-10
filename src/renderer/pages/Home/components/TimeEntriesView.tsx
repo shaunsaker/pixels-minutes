@@ -89,7 +89,7 @@ export const TimeEntriesView = (): ReactElement => {
         </Metric>
       </div>
 
-      <Table>
+      <Table className="print:overflow-visible">
         <TableHead>
           <TableRow>
             <TableHeaderCell className="bg-white dark:bg-gray-900"></TableHeaderCell>

@@ -37,7 +37,7 @@ export const useTimeEntries = () => {
 
   // if any dates are selected return only time entries for those dates
   if (selectedDates.some(value => value)) {
-    let [startDate, endDate] = selectedDates // TODO: SS these don't seem to be working
+    let [startDate, endDate] = selectedDates
 
     // when the dates are selected, they are based on the current time when they are selected
     // so we need to manually set them to the start and end of the day

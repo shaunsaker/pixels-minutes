@@ -26,7 +26,7 @@ export const Tabs = ({ render }: TabsProps): ReactElement => {
         <TabPrimitive value={Tab.Settings} text="Settings" icon={Cog6ToothIcon} />
       </TabList>
 
-      <div className="w-full h-full overflow-auto flex flex-col pt-6 gap-6">
+      <div className="w-full h-full overflow-auto print:overflow-visible flex flex-col pt-6 gap-6">
         {render && render(activeTab)}
       </div>
     </>

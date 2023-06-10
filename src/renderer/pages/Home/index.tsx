@@ -14,9 +14,9 @@ export const Home = (): ReactElement => {
   const hasProjectsFolder = Boolean(projectsFolder)
 
   return (
-    <div className="w-screen h-screen flex flex-col justify-center items-center bg-gray-900 p-8">
+    <div className="w-screen h-screen flex flex-col justify-center items-center bg-gray-900 print:bg-white p-8">
       <Card
-        className="overflow-hidden max-w-3xl h-full flex flex-col items-center text-center"
+        className="overflow-hidden max-w-3xl h-full flex flex-col items-center text-center print:overflow-visible print:border-none print:shadow-none "
         decoration="top"
         decorationColor="blue"
         style={{ minHeight: 480 }}

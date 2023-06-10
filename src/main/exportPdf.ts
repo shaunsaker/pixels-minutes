@@ -4,7 +4,6 @@ import fs from 'fs'
 
 import { Ipc } from './ipc/models'
 
-// TODO: SS first select filename
 export const exportPdf = (window: BrowserWindow) => {
   ipcMain.handle(Ipc.ExportPdf, async _ => {
     const filename = `time-entries-${dayjs().format('DD-MM-YYYY')}.pdf`
