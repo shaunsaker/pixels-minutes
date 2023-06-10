@@ -16,7 +16,7 @@ module.exports = async context => {
     return
   }
 
-  const appId = 'com.electron.app'
+  const appId = 'com.pixels-minutes.app'
 
   const { appOutDir } = context
 
