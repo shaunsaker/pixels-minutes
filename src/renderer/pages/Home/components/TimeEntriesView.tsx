@@ -1,5 +1,6 @@
-import { RectangleStackIcon } from '@heroicons/react/24/outline'
+import { ArrowRightOnRectangleIcon, RectangleStackIcon } from '@heroicons/react/24/outline'
 import {
+  Button,
   DateRangePicker,
   Metric,
   MultiSelectBox,
@@ -11,20 +12,18 @@ import {
   TableHeaderCell,
   TableRow,
   Text,
+  Title,
 } from '@tremor/react'
 import dayjs from 'dayjs'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useCallback } from 'react'
 
 import { DATE_FORMAT, DURATION_FORMAT, TIME_FORMAT } from '../../../constants'
 import { useProjects } from '../../../store/projects/useProjects'
 import { getTotalTimeTracked } from '../../../store/timeEntries/getTotalTimeTracked'
-import { useTimeEntries } from '../../../store/timeEntries/useTimeEntries'
+import { TimeEntry, useTimeEntries } from '../../../store/timeEntries/useTimeEntries'
 import { useTimeEntriesSelectedDates } from '../../../store/timeEntries/useTimeEntriesSelectedDates'
 import { useTimeEntriesSelectedProjects } from '../../../store/timeEntries/useTimeEntriesSelectedProjects'
 
-// it needs to be more obvious when a timer is started/stopped (we could maybe even remove the timer page if it's available globally)
-// export report to pdf
-// adding, editing and deleting time entries
 export const TimeEntriesView = (): ReactElement => {
   const [timeEntries] = useTimeEntries()
   const [projects] = useProjects()
@@ -32,10 +31,29 @@ export const TimeEntriesView = (): ReactElement => {
   const [selectedDates, setSelectedDates] = useTimeEntriesSelectedDates()
 
   const hasTimeEntries = Object.keys(timeEntries).length > 0
+  const timeEntriesArray = Object.values(timeEntries) as TimeEntry[]
+
+  // the start date is the selected date or the first time entry if any
+  const startDate = selectedDates[0]
+    ? dayjs(selectedDates[0]).format(DATE_FORMAT)
+    : timeEntriesArray[timeEntriesArray.length - 1]
+    ? dayjs(timeEntriesArray[timeEntriesArray.length - 1].startedAt).format(DATE_FORMAT)
+    : ''
+
+  // similarly for the end date
+  const endDate = selectedDates[1]
+    ? dayjs(selectedDates[1]).format(DATE_FORMAT)
+    : timeEntriesArray[0]
+    ? dayjs(timeEntriesArray[0].stoppedAt).format(DATE_FORMAT)
+    : ''
+
+  const onExportClick = useCallback(() => {
+    window.api.exportPdf()
+  }, [])
 
   return (
     <>
-      <div className="flex items-center gap-4">
+      <div className="print:hidden flex items-center gap-4">
         <MultiSelectBox
           placeholder="Select Project(s)"
           icon={RectangleStackIcon}
@@ -55,6 +73,10 @@ export const TimeEntriesView = (): ReactElement => {
           onValueChange={value => setSelectedDates(value)}
         />
       </div>
+
+      <Title className="hidden print:block">
+        {startDate} - {endDate}
+      </Title>
 
       <div>
         <Text>Total Time Tracked</Text>
@@ -120,6 +142,12 @@ export const TimeEntriesView = (): ReactElement => {
       </Table>
 
       {!hasTimeEntries && <Text>No time entries to show.</Text>}
+
+      <div className="print:hidden flex-1 flex flex-col justify-end items-end">
+        <Button icon={ArrowRightOnRectangleIcon} disabled={!hasTimeEntries} onClick={onExportClick}>
+          Export Pdf
+        </Button>
+      </div>
     </>
   )
 }

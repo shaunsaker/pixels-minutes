@@ -1,5 +1,7 @@
 export enum Ipc {
-  selectFolder = 'selectFolder',
-  watchFolder = 'watchFolder',
-  onActiveProjectChange = 'onActiveProjectChange',
+  SelectFolder = 'selectFolder',
+  WatchFolder = 'watchFolder',
+  OnActiveProjectChange = 'onActiveProjectChange',
+  ExportPdf = 'exportPdf',
+  OnMessage = 'onMessage',
 }

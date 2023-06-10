@@ -14,7 +14,11 @@ export const Tabs = ({ render }: TabsProps): ReactElement => {
 
   return (
     <>
-      <TabList value={activeTab} onValueChange={value => setActiveTab(value as Tab)}>
+      <TabList
+        className="print:hidden"
+        value={activeTab}
+        onValueChange={value => setActiveTab(value as Tab)}
+      >
         <TabPrimitive value={Tab.Timer} text="Timer" icon={ClockIcon} />
 
         <TabPrimitive value={Tab.TimeEntries} text="Time Entries" icon={CalendarDaysIcon} />

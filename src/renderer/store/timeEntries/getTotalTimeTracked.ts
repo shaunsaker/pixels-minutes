@@ -1,15 +1,7 @@
 import dayjs from 'dayjs'
 
 import { DURATION_FORMAT } from '../../constants'
-
-export type TimeEntry = {
-  id: string
-  projectId: string
-  startedAt: string
-  stoppedAt: string
-}
-
-export type TimeEntries = Record<string, TimeEntry>
+import { TimeEntries } from './useTimeEntries'
 
 export const getTotalTimeTracked = (timeEntries: TimeEntries) => {
   return dayjs

@@ -1,14 +1,19 @@
 import { electronAPI } from '@electron-toolkit/preload'
 import { contextBridge, ipcRenderer } from 'electron'
 
+export type Message = { message: string; type: 'success' | 'error' }
+
 import { Ipc } from '../main/ipc/models'
 
 // Custom APIs for renderer
 const api = {
-  selectFolder: () => ipcRenderer.invoke(Ipc.selectFolder),
-  watchFolder: (folder: string) => ipcRenderer.invoke(Ipc.watchFolder, folder),
+  selectFolder: () => ipcRenderer.invoke(Ipc.SelectFolder),
+  watchFolder: (folder: string) => ipcRenderer.invoke(Ipc.WatchFolder, folder),
   onActiveProjectChange: (callback: (project: string) => void) =>
-    ipcRenderer.on(Ipc.onActiveProjectChange, (_, project: string) => callback(project)),
+    ipcRenderer.on(Ipc.OnActiveProjectChange, (_, project: string) => callback(project)),
+  exportPdf: () => ipcRenderer.invoke(Ipc.ExportPdf),
+  onMessage: (callback: (message: Message) => void) =>
+    ipcRenderer.on(Ipc.OnMessage, (_, message: Message) => callback(message)),
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

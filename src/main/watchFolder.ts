@@ -10,7 +10,7 @@ export const watchFolder = (window: BrowserWindow) => {
   let watcher: FSWatcher
   let activeProject = ''
 
-  ipcMain.handle(Ipc.watchFolder, async (_, folder: string): Promise<void> => {
+  ipcMain.handle(Ipc.WatchFolder, async (_, folder: string): Promise<void> => {
     console.log({ activeProject, watcher })
 
     // close any existing watchers, e.g. when the user selects a new folder
@@ -43,7 +43,7 @@ export const watchFolder = (window: BrowserWindow) => {
           activeProject = project
           console.log('New project', { activeProject })
 
-          window.webContents.send(Ipc.onActiveProjectChange, activeProject)
+          window.webContents.send(Ipc.OnActiveProjectChange, activeProject)
         }
       }
     })

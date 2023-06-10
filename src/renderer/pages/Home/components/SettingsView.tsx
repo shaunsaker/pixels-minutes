@@ -2,11 +2,10 @@ import { FolderIcon } from '@heroicons/react/24/outline'
 import { Button, Table, TableBody, TableCell, TableRow } from '@tremor/react'
 import React, { ReactElement } from 'react'
 
-import { useProjectsFolder } from '../../../store/projects/useProjectsFolder'
-import { useSelectProjectsFolder } from '../../../store/projects/useSelectProjectsFolder'
+import { useProjectsFolder } from '../../../store/settings/useProjectsFolder'
+import { useSelectProjectsFolder } from '../../../store/settings/useSelectProjectsFolder'
 import { getFolderFromPath } from '../../../utils/getFolderFromPath'
 
-// TODO: SS convert into table
 export const SettingsView = (): ReactElement => {
   const [projectsFolder] = useProjectsFolder()
   const selectProjectsFolder = useSelectProjectsFolder()
@@ -16,7 +15,7 @@ export const SettingsView = (): ReactElement => {
       <Table>
         <TableBody>
           <TableRow>
-            <TableCell>📂 Tracking Time In</TableCell>
+            <TableCell>📂 Track Time In</TableCell>
 
             <TableCell>
               <b>{getFolderFromPath(projectsFolder)}</b>
