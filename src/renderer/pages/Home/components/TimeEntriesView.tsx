@@ -21,7 +21,7 @@ import {
 import dayjs from 'dayjs'
 import React, { ReactElement, useCallback } from 'react'
 
-import { DATE_FORMAT, DURATION_FORMAT, TIME_FORMAT } from '../../../constants'
+import { DATE_FORMAT, DURATION_FORMAT, TIME_FORMAT, WEBSITE_URL } from '../../../constants'
 import { useProjects } from '../../../store/projects/useProjects'
 import { getTotalTimeTracked } from '../../../store/timeEntries/getTotalTimeTracked'
 import { useDeleteTimeEntry } from '../../../store/timeEntries/useDeleteTimeEntry'
@@ -143,7 +143,7 @@ export const TimeEntriesView = (): ReactElement => {
                       .format(DURATION_FORMAT)}
                   </TableCell>
 
-                  <TableCell>
+                  <TableCell className="print:hidden">
                     <Button
                       size="xs"
                       icon={TrashIcon}
@@ -167,6 +167,15 @@ export const TimeEntriesView = (): ReactElement => {
         <Button icon={ArrowRightOnRectangleIcon} disabled={!hasTimeEntries} onClick={onExportClick}>
           Export Pdf
         </Button>
+      </div>
+
+      <div className="hidden print:block">
+        <Text className="text-center">
+          Powered by automated time tracking with{' '}
+          <a href={WEBSITE_URL} className="underline">
+            Pixels Minutes
+          </a>
+        </Text>
       </div>
     </>
   )

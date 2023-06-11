@@ -1,7 +1,6 @@
 import { Card } from '@tremor/react'
 import React, { ReactElement } from 'react'
 
-import logomark from '../../assets/logomark.svg'
 import { useProjectsFolder } from '../../store/settings/useProjectsFolder'
 import { SettingsView } from './components/SettingsView'
 import { Tabs } from './components/Tabs'
@@ -20,12 +19,6 @@ export const Home = (): ReactElement => {
         className="relative overflow-hidden max-w-4xl h-full flex flex-col items-center text-center print:overflow-visible"
         style={{ minHeight: 480, boxShadow: 'none' }}
       >
-        <img
-          className="absolute top-6 left-6 w-10 h-10"
-          src={logomark}
-          alt="Pixels Minutes Logomark"
-        />
-
         {!hasProjectsFolder ? (
           <WelcomeView />
         ) : (
