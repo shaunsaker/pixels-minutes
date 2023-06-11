@@ -42,7 +42,7 @@ export const TimerView = (): ReactElement => {
           </Button>
         </>
       ) : (
-        <Text>
+        <Text className="max-w-lg">
           Not currently tracking. Tracking will start automatically when you edit any of your
           project files.
         </Text>
