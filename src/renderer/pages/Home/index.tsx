@@ -17,7 +17,7 @@ export const Home = (): ReactElement => {
   return (
     <div className="w-screen h-screen flex flex-col justify-center items-center bg-slate-900 print:bg-white p-8 print:p-0">
       <Card
-        className="relative overflow-hidden max-w-3xl h-full flex flex-col items-center text-center print:overflow-visible"
+        className="relative overflow-hidden max-w-4xl h-full flex flex-col items-center text-center print:overflow-visible"
         style={{ minHeight: 480, boxShadow: 'none' }}
       >
         <img

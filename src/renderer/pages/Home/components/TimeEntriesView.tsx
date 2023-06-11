@@ -1,4 +1,8 @@
-import { ArrowRightOnRectangleIcon, RectangleStackIcon } from '@heroicons/react/24/outline'
+import {
+  ArrowRightOnRectangleIcon,
+  RectangleStackIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline'
 import {
   Button,
   DateRangePicker,
@@ -20,6 +24,7 @@ import React, { ReactElement, useCallback } from 'react'
 import { DATE_FORMAT, DURATION_FORMAT, TIME_FORMAT } from '../../../constants'
 import { useProjects } from '../../../store/projects/useProjects'
 import { getTotalTimeTracked } from '../../../store/timeEntries/getTotalTimeTracked'
+import { useDeleteTimeEntry } from '../../../store/timeEntries/useDeleteTimeEntry'
 import { TimeEntry, useTimeEntries } from '../../../store/timeEntries/useTimeEntries'
 import { useTimeEntriesSelectedDates } from '../../../store/timeEntries/useTimeEntriesSelectedDates'
 import { useTimeEntriesSelectedProjects } from '../../../store/timeEntries/useTimeEntriesSelectedProjects'
@@ -29,6 +34,7 @@ export const TimeEntriesView = (): ReactElement => {
   const [projects] = useProjects()
   const [selectedProjects, setSelectedProjects] = useTimeEntriesSelectedProjects()
   const [selectedDates, setSelectedDates] = useTimeEntriesSelectedDates()
+  const deleteTimeEntry = useDeleteTimeEntry()
 
   const hasTimeEntries = Object.keys(timeEntries).length > 0
   const timeEntriesArray = Object.values(timeEntries) as TimeEntry[]
@@ -103,6 +109,8 @@ export const TimeEntriesView = (): ReactElement => {
             <TableHeaderCell className="bg-white dark:bg-gray-900">Stopped</TableHeaderCell>
 
             <TableHeaderCell className="bg-white dark:bg-gray-900">Duration</TableHeaderCell>
+
+            <TableHeaderCell className="bg-white dark:bg-gray-900 print:hidden"></TableHeaderCell>
           </TableRow>
         </TableHead>
 
@@ -133,6 +141,18 @@ export const TimeEntriesView = (): ReactElement => {
                     {dayjs
                       .duration(dayjs(timeEntry.stoppedAt).diff(timeEntry.startedAt))
                       .format(DURATION_FORMAT)}
+                  </TableCell>
+
+                  <TableCell>
+                    <Button
+                      size="xs"
+                      icon={TrashIcon}
+                      variant="light"
+                      color="red"
+                      onClick={() => deleteTimeEntry(timeEntry.id)}
+                    >
+                      Delete
+                    </Button>
                   </TableCell>
                 </TableRow>
               )
