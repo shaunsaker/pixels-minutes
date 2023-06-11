@@ -10,7 +10,7 @@ export const useCreateProject = () => {
       const project: Project = {
         id: projectId,
         name: projectId,
-        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        color: COLORS[Object.keys(projects).length % COLORS.length],
       }
 
       setProjects({
