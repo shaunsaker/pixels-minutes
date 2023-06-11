@@ -20,7 +20,9 @@ import {
 } from '@tremor/react'
 import dayjs from 'dayjs'
 import React, { ReactElement, useCallback } from 'react'
+import { toast } from 'react-hot-toast'
 
+import { AlertDialog } from '../../../components/AlertDialog'
 import { DATE_FORMAT, DURATION_FORMAT, TIME_FORMAT, WEBSITE_URL } from '../../../constants'
 import { useProjects } from '../../../store/projects/useProjects'
 import { getTotalTimeTracked } from '../../../store/timeEntries/getTotalTimeTracked'
@@ -52,6 +54,15 @@ export const TimeEntriesView = (): ReactElement => {
     : timeEntriesArray[0]
     ? dayjs(timeEntriesArray[0].stoppedAt).format(DATE_FORMAT)
     : ''
+
+  const onDeleteTimeEntry = useCallback(
+    (timeEntryId: string) => {
+      deleteTimeEntry(timeEntryId)
+
+      toast.success('Time entry deleted successfully!')
+    },
+    [deleteTimeEntry],
+  )
 
   const onExportClick = useCallback(() => {
     window.api.exportPdf()
@@ -144,15 +155,15 @@ export const TimeEntriesView = (): ReactElement => {
                   </TableCell>
 
                   <TableCell className="print:hidden">
-                    <Button
-                      size="xs"
-                      icon={TrashIcon}
-                      variant="light"
-                      color="red"
-                      onClick={() => deleteTimeEntry(timeEntry.id)}
+                    <AlertDialog
+                      title="Are you absolutely sure?"
+                      description="This action cannot be undone. This will permanently delete your time entry."
+                      onConfirmClick={() => onDeleteTimeEntry(timeEntry.id)}
                     >
-                      Delete
-                    </Button>
+                      <Button size="xs" icon={TrashIcon} variant="light" color="red">
+                        Delete
+                      </Button>
+                    </AlertDialog>
                   </TableCell>
                 </TableRow>
               )
