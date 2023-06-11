@@ -8,23 +8,25 @@ export const WelcomeView = (): ReactElement => {
   const selectProjectsFolder = useSelectProjectsFolder()
 
   return (
-    <div>
-      <Title>
+    <div className="pt-2">
+      <Title className="mb-6">
         Welcome to <b>Pixels Minutes</b> 🎨⏱️
       </Title>
 
-      <Subtitle>
-        The ingenious automated time tracker designed specifically for creative professionals.
-      </Subtitle>
+      <div className="max-w-lg flex flex-col items-center gap-6">
+        <Subtitle>
+          The ingenious automated time tracker designed specifically for creative professionals.
+        </Subtitle>
 
-      <Text className="mt-4">
-        Simply choose the folder where you store all your projects, and let Pixel Minutes do the
-        rest.
-      </Text>
+        <Text>
+          Simply choose the folder where you store all your projects, and let Pixel Minutes do the
+          rest.
+        </Text>
 
-      <Button className="mt-4" icon={FolderIcon} onClick={selectProjectsFolder}>
-        Select Projects folder
-      </Button>
+        <Button icon={FolderIcon} onClick={selectProjectsFolder}>
+          Select Projects folder
+        </Button>
+      </div>
     </div>
   )
 }
