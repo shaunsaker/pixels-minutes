@@ -7,6 +7,10 @@ import { FSWatcher } from 'vite'
 import { Ipc } from './ipc/models'
 
 export const watchFolder = (window: BrowserWindow) => {
+  // remove any active handlers
+  ipcMain.removeHandler(Ipc.OnStopTracking)
+  ipcMain.removeHandler(Ipc.WatchFolder)
+
   let watcher: FSWatcher
   let activeProject = ''
 

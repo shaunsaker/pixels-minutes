@@ -5,6 +5,9 @@ import fs from 'fs'
 import { Ipc } from './ipc/models'
 
 export const exportPdf = (window: BrowserWindow) => {
+  // remove any active handlers
+  ipcMain.removeHandler(Ipc.ExportPdf)
+
   ipcMain.handle(Ipc.ExportPdf, async _ => {
     const filename = `time-entries-${dayjs().format('DD-MM-YYYY')}.pdf`
     const { filePath, canceled } = await dialog.showSaveDialog(window, { defaultPath: filename })
