@@ -70,6 +70,15 @@ export const TimeEntriesView = (): ReactElement => {
 
   return (
     <>
+      <div className="hidden print:block">
+        <Text className="text-center">
+          Powered by automated time tracking with{' '}
+          <a href={WEBSITE_URL} className="underline">
+            Pixels Minutes
+          </a>
+        </Text>
+      </div>
+
       <div className="print:hidden flex items-center gap-4">
         <MultiSelectBox
           placeholder="Select Project(s)"
@@ -178,15 +187,6 @@ export const TimeEntriesView = (): ReactElement => {
         <Button icon={ArrowRightOnRectangleIcon} disabled={!hasTimeEntries} onClick={onExportClick}>
           Export Pdf
         </Button>
-      </div>
-
-      <div className="hidden print:block">
-        <Text className="text-center">
-          Powered by automated time tracking with{' '}
-          <a href={WEBSITE_URL} className="underline">
-            Pixels Minutes
-          </a>
-        </Text>
       </div>
     </>
   )
