@@ -23,6 +23,7 @@ import React, { ReactElement, useCallback } from 'react'
 import { toast } from 'react-hot-toast'
 
 import { AlertDialog } from '../../../components/AlertDialog'
+import { ProjectColor } from '../../../components/ProjectColor'
 import { DATE_FORMAT, DURATION_FORMAT, TIME_FORMAT, WEBSITE_URL } from '../../../constants'
 import { useProjects } from '../../../store/projects/useProjects'
 import { getTotalTimeTracked } from '../../../store/timeEntries/getTotalTimeTracked'
@@ -146,7 +147,7 @@ export const TimeEntriesView = (): ReactElement => {
               return (
                 <TableRow key={timeEntry.id}>
                   <TableCell>
-                    <div className={`w-4 h-4 rounded-full bg-${project.color}-500`}></div>
+                    <ProjectColor color={project.color} />
                   </TableCell>
 
                   <TableCell>{project.name}</TableCell>

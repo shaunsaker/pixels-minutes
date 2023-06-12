@@ -2,6 +2,7 @@ import { Card } from '@tremor/react'
 import React, { ReactElement } from 'react'
 
 import { useProjectsFolder } from '../../store/settings/useProjectsFolder'
+import { ProjectsView } from './components/ProjectsView'
 import { SettingsView } from './components/SettingsView'
 import { Tabs } from './components/Tabs'
 import { TimeEntriesView } from './components/TimeEntriesView'
@@ -27,6 +28,10 @@ export const Home = (): ReactElement => {
               render={activeTab => {
                 if (activeTab === 'timeEntries') {
                   return <TimeEntriesView />
+                }
+
+                if (activeTab === 'projects') {
+                  return <ProjectsView />
                 }
 
                 if (activeTab === 'settings') {

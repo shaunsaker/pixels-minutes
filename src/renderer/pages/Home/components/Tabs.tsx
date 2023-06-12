@@ -1,9 +1,13 @@
-import { CalendarDaysIcon, ClockIcon, Cog6ToothIcon } from '@heroicons/react/24/outline'
+import {
+  CalendarDaysIcon,
+  ClockIcon,
+  Cog6ToothIcon,
+  RectangleStackIcon,
+} from '@heroicons/react/24/outline'
 import { Tab as TabPrimitive, TabList } from '@tremor/react'
 import React, { ReactElement } from 'react'
 
-import { Tab } from '../../../constants'
-import { useActiveTab } from '../../../store/activeTab/useActiveTab'
+import { Tab, useActiveTab } from '../../../store/activeTab/useActiveTab'
 
 type TabsProps = {
   render: (activeTab: string) => ReactElement
@@ -22,6 +26,8 @@ export const Tabs = ({ render }: TabsProps): ReactElement => {
         <TabPrimitive value={Tab.Timer} text="Timer" icon={ClockIcon} />
 
         <TabPrimitive value={Tab.TimeEntries} text="Time Entries" icon={CalendarDaysIcon} />
+
+        <TabPrimitive value={Tab.Projects} text="Projects" icon={RectangleStackIcon} />
 
         <TabPrimitive value={Tab.Settings} text="Settings" icon={Cog6ToothIcon} />
       </TabList>

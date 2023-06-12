@@ -2,6 +2,8 @@ import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog'
 import { Button, Card, Text, Title } from '@tremor/react'
 import React, { ReactElement, ReactNode } from 'react'
 
+import { Backdrop } from './Backdrop'
+
 type AlertDialogProps = {
   title: string
   description: string
@@ -27,7 +29,7 @@ export const AlertDialog = ({
 
       <AlertDialogPrimitive.Portal>
         <AlertDialogPrimitive.Overlay asChild>
-          <div className="fixed inset-0 bg-gray-900 dark:bg-white bg-opacity-50 dark:bg-opacity-20" />
+          <Backdrop />
         </AlertDialogPrimitive.Overlay>
 
         <div className="fixed inset-0 flex flex-col justify-center items-center">
@@ -41,9 +43,9 @@ export const AlertDialog = ({
                 <Text>{description}</Text>
               </AlertDialogPrimitive.Description>
 
-              <div className="flex justify-end gap-4">
+              <div className="mt-4 flex justify-end gap-4">
                 <AlertDialogPrimitive.Cancel asChild>
-                  <Button color="gray" onClick={onCancelClick}>
+                  <Button color="gray" variant="secondary" onClick={onCancelClick}>
                     {cancelText}
                   </Button>
                 </AlertDialogPrimitive.Cancel>

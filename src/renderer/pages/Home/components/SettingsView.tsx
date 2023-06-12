@@ -11,24 +11,22 @@ export const SettingsView = (): ReactElement => {
   const selectProjectsFolder = useSelectProjectsFolder()
 
   return (
-    <div className="w-full flex flex-col items-center">
-      <Table>
-        <TableBody>
-          <TableRow>
-            <TableCell>📂 Track Time In</TableCell>
+    <Table className="max-w-lg self-center">
+      <TableBody>
+        <TableRow>
+          <TableCell>📂 Track Time In</TableCell>
 
-            <TableCell>
-              <b>{getFolderFromPath(projectsFolder)}</b>
-            </TableCell>
+          <TableCell>
+            <b>{getFolderFromPath(projectsFolder)}</b>
+          </TableCell>
 
-            <TableCell>
-              <Button className="ml-4" icon={FolderIcon} size="xs" onClick={selectProjectsFolder}>
-                Change
-              </Button>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </div>
+          <TableCell>
+            <Button className="ml-4" icon={FolderIcon} size="xs" onClick={selectProjectsFolder}>
+              Change
+            </Button>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
   )
 }

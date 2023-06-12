@@ -1,7 +1,12 @@
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 
-import { Tab } from '../../constants'
+export enum Tab {
+  Timer = 'timer',
+  TimeEntries = 'timeEntries',
+  Projects = 'projects',
+  Settings = 'settings',
+}
 
 const atom = atomWithStorage<Tab>('activeTab', Tab.Timer)
 

@@ -22,10 +22,12 @@ export const COLORS = [
   'slate',
 ] as const
 
+export type Color = (typeof COLORS)[number]
+
 export type Project = {
   id: string
   name: string
-  color: (typeof COLORS)[number]
+  color: Color
 }
 
 const atom = atomWithStorage<Record<string, Project>>('projects', {})
