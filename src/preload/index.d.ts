@@ -8,6 +8,7 @@ declare global {
     api: {
       selectFolder: () => Promise<Electron.OpenDialogReturnValue>
       watchFolder: (folder: string) => void
+      onStopTracking: () => void
       onActiveProjectChange: (callback: (project: string) => void) => void
       exportPdf: () => Promise<void>
       onMessage: (callback: (message: Message) => void) => void

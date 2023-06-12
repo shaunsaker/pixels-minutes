@@ -9,6 +9,7 @@ import { Ipc } from '../main/ipc/models'
 const api = {
   selectFolder: () => ipcRenderer.invoke(Ipc.SelectFolder),
   watchFolder: (folder: string) => ipcRenderer.invoke(Ipc.WatchFolder, folder),
+  onStopTracking: () => ipcRenderer.invoke(Ipc.OnStopTracking),
   onActiveProjectChange: (callback: (project: string) => void) =>
     ipcRenderer.on(Ipc.OnActiveProjectChange, (_, project: string) => callback(project)),
   exportPdf: () => ipcRenderer.invoke(Ipc.ExportPdf),

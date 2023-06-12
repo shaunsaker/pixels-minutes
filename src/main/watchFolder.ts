@@ -10,6 +10,11 @@ export const watchFolder = (window: BrowserWindow) => {
   let watcher: FSWatcher
   let activeProject = ''
 
+  ipcMain.handle(Ipc.OnStopTracking, async (): Promise<void> => {
+    // reset the active project so that if the user starts tracking again, we can detect the change
+    activeProject = ''
+  })
+
   ipcMain.handle(Ipc.WatchFolder, async (_, folder: string): Promise<void> => {
     console.log({ activeProject, watcher })
 

@@ -20,7 +20,7 @@ export const useStartTracking = () => {
       setCurrentTracking(newCurrentTracking)
 
       sendNotification({
-        title: 'Tracking started',
+        title: 'Started Tracking',
         body: `You are now tracking time for ${projectId}.`,
       })
     },

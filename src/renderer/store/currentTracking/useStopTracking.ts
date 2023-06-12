@@ -35,9 +35,12 @@ export const useStopTracking = () => {
       .format(DURATION_FORMAT)
 
     sendNotification({
-      title: 'Tracking stopped',
+      title: 'Stopped Tracking',
       body: `You tracked ${duration} for ${currentTracking.projectId}.`,
     })
+
+    // send the stop tracking event to ipc so that we can reset the activeProject and detect any new changes
+    window.api.onStopTracking()
   }, [currentTracking, sendNotification, setCurrentTracking, setTimeEntries, timeEntries])
 
   return stopTracking
