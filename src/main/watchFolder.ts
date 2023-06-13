@@ -8,19 +8,12 @@ import { Ipc } from './ipc/models'
 
 export const watchFolder = (window: BrowserWindow) => {
   // remove any active handlers
-  ipcMain.removeHandler(Ipc.OnStopTracking)
   ipcMain.removeHandler(Ipc.WatchFolder)
 
   let watcher: FSWatcher
-  let activeProject = ''
-
-  ipcMain.handle(Ipc.OnStopTracking, async (): Promise<void> => {
-    // reset the active project so that if the user starts tracking again, we can detect the change
-    activeProject = ''
-  })
 
   ipcMain.handle(Ipc.WatchFolder, async (_, folder: string): Promise<void> => {
-    console.log({ activeProject, watcher })
+    console.log({ watcher })
 
     // close any existing watchers, e.g. when the user selects a new folder
     if (watcher) {
@@ -48,11 +41,10 @@ export const watchFolder = (window: BrowserWindow) => {
       if (filename) {
         const project = projects.find(project => filename.includes(project))
 
-        if (project && project !== activeProject) {
-          activeProject = project
-          console.log('New project', { activeProject })
+        if (project) {
+          console.log('Project change', { project })
 
-          window.webContents.send(Ipc.OnActiveProjectChange, activeProject)
+          window.webContents.send(Ipc.OnProjectEdit, project)
         }
       }
     })

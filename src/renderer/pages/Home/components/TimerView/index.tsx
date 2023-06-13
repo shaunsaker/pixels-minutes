@@ -2,10 +2,10 @@ import { StopIcon } from '@heroicons/react/24/outline'
 import { Button, Table, TableBody, TableCell, TableRow, Text } from '@tremor/react'
 import React, { ReactElement } from 'react'
 
-import { useCurrentTracking } from '../../../store/currentTracking/useCurrentTracking'
-import { useStopTracking } from '../../../store/currentTracking/useStopTracking'
-import { useProjects } from '../../../store/projects/useProjects'
-import { useTimer } from '../../../utils/useTimer'
+import { useCurrentTracking } from '../../../../store/currentTracking/useCurrentTracking'
+import { useStopTracking } from '../../../../store/currentTracking/useStopTracking'
+import { useProjects } from '../../../../store/projects/useProjects'
+import { useTimer } from '../../../../utils/useTimer'
 
 export const TimerView = (): ReactElement => {
   const [currentTracking] = useCurrentTracking()

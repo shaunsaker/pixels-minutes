@@ -17,7 +17,7 @@ export const EditProjectDialog = ({ project, children }: EditProjectDialogProps)
 
   return (
     <Dialog
-      title={`Editing Project ${project.name}`}
+      title={`Editing Project: ${project.name}`}
       trigger={children}
       confirmText="Save"
       onConfirmClick={() => editProject({ id: project.id, name: projectName, color: projectColor })}

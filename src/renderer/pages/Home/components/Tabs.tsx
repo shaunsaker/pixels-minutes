@@ -7,7 +7,7 @@ import {
 import { Tab as TabPrimitive, TabList } from '@tremor/react'
 import React, { ReactElement } from 'react'
 
-import { Tab, useActiveTab } from '../../../store/activeTab/useActiveTab'
+import { Tab, useActiveTab } from '../../../store/useActiveTab'
 
 type TabsProps = {
   render: (activeTab: string) => ReactElement

@@ -22,15 +22,15 @@ import dayjs from 'dayjs'
 import React, { ReactElement, useCallback } from 'react'
 import { toast } from 'react-hot-toast'
 
-import { AlertDialog } from '../../../components/AlertDialog'
-import { ProjectColor } from '../../../components/ProjectColor'
-import { DATE_FORMAT, DURATION_FORMAT, TIME_FORMAT, WEBSITE_URL } from '../../../constants'
-import { useProjects } from '../../../store/projects/useProjects'
-import { getTotalTimeTracked } from '../../../store/timeEntries/getTotalTimeTracked'
-import { useDeleteTimeEntry } from '../../../store/timeEntries/useDeleteTimeEntry'
-import { TimeEntry, useTimeEntries } from '../../../store/timeEntries/useTimeEntries'
-import { useTimeEntriesSelectedDates } from '../../../store/timeEntries/useTimeEntriesSelectedDates'
-import { useTimeEntriesSelectedProjects } from '../../../store/timeEntries/useTimeEntriesSelectedProjects'
+import { AlertDialog } from '../../../../components/AlertDialog'
+import { ProjectColor } from '../../../../components/ProjectColor'
+import { DATE_FORMAT, DURATION_FORMAT, TIME_FORMAT, WEBSITE_URL } from '../../../../constants'
+import { useProjects } from '../../../../store/projects/useProjects'
+import { getTotalTimeTracked } from '../../../../store/timeEntries/getTotalTimeTracked'
+import { useDeleteTimeEntry } from '../../../../store/timeEntries/useDeleteTimeEntry'
+import { TimeEntry, useTimeEntries } from '../../../../store/timeEntries/useTimeEntries'
+import { useTimeEntriesSelectedDates } from '../../../../store/timeEntries/useTimeEntriesSelectedDates'
+import { useTimeEntriesSelectedProjects } from '../../../../store/timeEntries/useTimeEntriesSelectedProjects'
 
 export const TimeEntriesView = (): ReactElement => {
   const [timeEntries] = useTimeEntries()
@@ -108,7 +108,7 @@ export const TimeEntriesView = (): ReactElement => {
       <div>
         <Text>Total Time Tracked</Text>
 
-        <Metric>
+        <Metric className="mt-1">
           {
             // @ts-expect-error FIXME: something wrong in the useTimeEntries hook
             getTotalTimeTracked(timeEntries)

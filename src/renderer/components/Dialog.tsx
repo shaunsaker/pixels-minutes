@@ -39,7 +39,7 @@ export const Dialog = ({
           <DialogPrimitive.Content asChild>
             <Card className="relative max-w-lg flex flex-col gap-2">
               <DialogPrimitive.Title asChild>
-                <Title>{title}</Title>
+                <Title className="mb-4">{title}</Title>
               </DialogPrimitive.Title>
 
               <DialogPrimitive.Description asChild>
@@ -48,7 +48,7 @@ export const Dialog = ({
 
               {children}
 
-              <div className="mt-4 flex justify-end gap-4">
+              <div className="mt-6 flex justify-end gap-4">
                 <DialogPrimitive.Close asChild>
                   <Button color="gray" variant="secondary" onClick={onCancelClick}>
                     {cancelText}
